@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Insert Data of the new User</h1>
+<div mat-dialog-content>
+    <p>Username:
+        <mat-form-field>
+            <input type="text" matInput [(ngModel)]="data.username">
+        </mat-form-field>
+    </p>
+    
+    <p>First Name:
+        <mat-form-field>
+            <input type="text" matInput [(ngModel)]="data.firstName">
+        </mat-form-field>
+    </p>
+    <p>Last Name:
+        <mat-form-field>
+            <input type="text" matInput [(ngModel)]="data.lastName">
+        </mat-form-field>
+    </p>
+    <p>Password:
+        <mat-form-field>
+            <input type="password" matInput [(ngModel)]="data.password">
+        </mat-form-field>
+    </p>
+    
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">Back</button>
+    <button mat-button [mat-dialog-close]="data.username"  (click)="createUser()">OK</button>
+</div>
+
+
+        
+        
