@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/shared/services/api.service';
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 
 @Component({
     selector: 'app-charts',
@@ -63,7 +65,7 @@ export class ChartsComponent implements OnInit {
     public lineChartData: Array<any> = [
         { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
         { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-        { data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C' }
+        { data: [18, 48, 77, 9, 100, 27, 40, 41], label: 'Series C' }
     ];
     public lineChartLabels: Array<any> = [
         'January',
@@ -72,7 +74,12 @@ export class ChartsComponent implements OnInit {
         'April',
         'May',
         'June',
-        'July'
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
     ];
     public lineChartOptions: any = {
         responsive: true
@@ -139,7 +146,8 @@ export class ChartsComponent implements OnInit {
          * assign it;
          */
     }
-    constructor() {}
+    messagesList: any;
+    constructor(private dataApi: ApiService) {}
 
     ngOnInit() {
         this.barChartType = 'bar';
@@ -152,5 +160,10 @@ export class ChartsComponent implements OnInit {
         this.polarAreaChartType = 'polarArea';
         this.lineChartLegend = true;
         this.lineChartType = 'line';
+        this.messagesList = this.dataApi.getAllMessages();
+
+        for( let message of this.messagesList){
+            console.log(message);
+        }
     }
 }

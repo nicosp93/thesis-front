@@ -31,8 +31,9 @@ export class LoginComponent implements OnInit {
     onLogin() {
         this.response = this.login(this.user, this.pass);
         if(this.response){
+            console.log("entro con true 1");
             localStorage.setItem('isLoggedin', 'true');
-            this.router.navigate(['/charts']);
+            this.router.navigate(['/dashboard']);
         }else{
             this.openWrongPass();
         }

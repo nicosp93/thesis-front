@@ -13,10 +13,8 @@ export class ApiService{
 
     getAllMessages(){
         const url_api =  Configuration.server + '/getmessages';
-        
-        return this.http.get(url_api,{
-            headers: {'Access-Control-Allow-Origin':'*','header2':'value2'}
-        });
+
+        return this.http.get(url_api);
     }
 
     login(user, pass){
@@ -28,4 +26,5 @@ export class ApiService{
         const url_api =  Configuration.server + '/register?username='+ username +'&firstName='+ firstname + '&lastName='+ lastname + '&password='+ password;
         return this.http.get(url_api);
     }
+
 }

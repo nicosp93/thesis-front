@@ -14,7 +14,9 @@ import { MatTableModule, MatPaginatorModule } from '@angular/material';
 import { ChartsRoutingModule } from './charts-routing.module';
 import { ChartsComponent } from './charts.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
+import { DatePickerComponent2 } from './date-picker2/date-picker.component';
 import { TablesComponent } from './tables/tables.component';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @NgModule({
     imports: [
@@ -29,6 +31,7 @@ import { TablesComponent } from './tables/tables.component';
         MatGridListModule,
         FlexLayoutModule.withConfig({addFlexToParent: false})
     ],
-    declarations: [ChartsComponent, DatePickerComponent, TablesComponent]
+    declarations: [ChartsComponent, DatePickerComponent, DatePickerComponent2, TablesComponent],
+     providers: [ApiService]
 })
 export class ChartsModule {}
