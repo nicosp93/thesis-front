@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
         this.response = this.login(this.user, this.pass);
         if(this.response){
             localStorage.setItem('isLoggedin', 'true');
-            this.router.navigate(['/charts']);
+            this.router.navigate(['/charts'] );
         }else{
             this.openWrongPass();
         }

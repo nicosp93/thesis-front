@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import  {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable }from 'rxjs/internal/Observable';
 import { Configuration } from '../../app.constants';
+import { Message } from '../../message.model';
 
 @Injectable({
     providedIn:'root'
@@ -11,9 +12,8 @@ export class ApiService{
 
     }
 
-    getAllMessages(){
+    getAllMessages(): any {
         const url_api =  Configuration.server + '/getmessages';
-
         return this.http.get(url_api);
     }
 

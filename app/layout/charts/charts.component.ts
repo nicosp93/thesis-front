@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { Message } from 'src/app/message.model';
 
 @Component({
     selector: 'app-charts',
@@ -8,6 +8,7 @@ import { Message } from '@angular/compiler/src/i18n/i18n_ast';
     styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent implements OnInit {
+
     // bar chart
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -62,10 +63,11 @@ export class ChartsComponent implements OnInit {
     public polarAreaChartType: string;
 
     // lineChart
+    public dataList1:Array<number>  = [];
     public lineChartData: Array<any> = [
-        { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-        { data: [18, 48, 77, 9, 100, 27, 40, 41], label: 'Series C' }
+        { data: this.dataList1, label: 'Device 1' },
+        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Device 2' },
+        { data: [18, 48, 77, 9, 100, 27, 40, 41], label: Device 3' }
     ];
     public lineChartLabels: Array<any> = [
         'January',
@@ -146,10 +148,14 @@ export class ChartsComponent implements OnInit {
          * assign it;
          */
     }
-    messagesList: any;
-    constructor(private dataApi: ApiService) {}
+
+
+    constructor(private dataApi: ApiService) {
+    }
 
     ngOnInit() {
+        
+
         this.barChartType = 'bar';
         this.barChartLegend = true;
         this.doughnutChartType = 'doughnut';
@@ -160,10 +166,20 @@ export class ChartsComponent implements OnInit {
         this.polarAreaChartType = 'polarArea';
         this.lineChartLegend = true;
         this.lineChartType = 'line';
-        this.messagesList = this.dataApi.getAllMessages();
 
-        for( let message of this.messagesList){
-            console.log(message);
+         this.messages();
+    }
+
+    public messagesList: Message[];
+    public msj: Message;
+    messages(){
+        this.dataApi.getAllMessages().subscribe((list :Message[]) => {
+        this.messagesList = list;
+        for(var i = 0; i < list.length; i++){
+          this.msj = list[i];
+          this.dataList1.push(+this.msj.value)
+          console.log(this.lineChartData[1].data);
         }
+      });
     }
 }
