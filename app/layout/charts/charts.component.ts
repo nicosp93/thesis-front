@@ -64,10 +64,12 @@ export class ChartsComponent implements OnInit {
 
     // lineChart
     public dataList1:Array<number>  = [];
+    public dataList2:Array<number>  = [];
+    public dataList3:Array<number>  = [];
     public lineChartData: Array<any> = [
         { data: this.dataList1, label: 'Device 1' },
-        { data: [28, 48, 40, 19, 86, 27, 90], label: 'Device 2' },
-        { data: [18, 48, 77, 9, 100, 27, 40, 41], label: Device 3' }
+        { data: this.dataList2, label: 'Device 2' },
+        { data: this.dataList3, label: 'Device 3' } 
     ];
     public lineChartLabels: Array<any> = [
         'January',
@@ -172,14 +174,17 @@ export class ChartsComponent implements OnInit {
 
     public messagesList: Message[];
     public msj: Message;
+    public devices: Array<number>  = [];
     messages(){
         this.dataApi.getAllMessages().subscribe((list :Message[]) => {
         this.messagesList = list;
         for(var i = 0; i < list.length; i++){
           this.msj = list[i];
+          devices.indexOf(this.msj) === -1 ? devices.push(this.msj) : console.log("This item already exists");
           this.dataList1.push(+this.msj.value)
-          console.log(this.lineChartData[1].data);
+          console.log(this.devices );
         }
+        console.log(this.messagesList );
       });
     }
 }
