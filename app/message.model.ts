@@ -1,8 +1,8 @@
 export class Message {
     id: Number;
-    date: Date;
-    sensor: Number;
-    time: String;
-    name: String;
-    value: String;
+    public date: Date;
+    public sensorId: string;
+    public time: string;
+    public name: string;
+    public value: string;
 }

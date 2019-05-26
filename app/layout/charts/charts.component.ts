@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
+import { Observable } from 'rxjs';
+import { DataStored } from 'src/app/dataStored.model';
 
 @Component({
     selector: 'app-charts',
@@ -62,15 +64,7 @@ export class ChartsComponent implements OnInit {
 
     public polarAreaChartType: string;
 
-    // lineChart
-    public dataList1:Array<number>  = [];
-    public dataList2:Array<number>  = [];
-    public dataList3:Array<number>  = [];
-    public lineChartData: Array<any> = [
-        { data: this.dataList1, label: 'Device 1' },
-        { data: this.dataList2, label: 'Device 2' },
-        { data: this.dataList3, label: 'Device 3' } 
-    ];
+    
     public lineChartLabels: Array<any> = [
         'January',
         'February',
@@ -150,14 +144,35 @@ export class ChartsComponent implements OnInit {
          * assign it;
          */
     }
+    public messagesList = new Array<Message>();
+    public dataValues = new Array<Array<number>>();
+    public devices = new Array<string>();
 
+    messages(){
+        this.dataApi.getAllMessages().subscribe((list :Message[]) => {
+        this.messagesList = list;
+        for( let i = 0; i <  list.length; i++){
+            if(this.devices.indexOf(list[i].sensorId) === -1 ){
+                this.devices.push(list[i].sensorId);
+                var arrayAux: number[] = [+list[i].value];
+                this.dataValues.push(arrayAux);
+            } else {
+                 this.dataValues[this.devices.indexOf(list[i].sensorId)].push(+list[i].value);
+            }
+        }
+        //Assign variables
+        let dataList1 = this.dataValues[1];
+        console.log(this.devices);
+        console.log(this.dataList1);
+        console.log(this.dataValues[1]);
+      });
+    }
 
     constructor(private dataApi: ApiService) {
+        this.messages();
     }
 
     ngOnInit() {
-        
-
         this.barChartType = 'bar';
         this.barChartLegend = true;
         this.doughnutChartType = 'doughnut';
@@ -168,23 +183,18 @@ export class ChartsComponent implements OnInit {
         this.polarAreaChartType = 'polarArea';
         this.lineChartLegend = true;
         this.lineChartType = 'line';
-
-         this.messages();
+       
+       
     }
 
-    public messagesList: Message[];
-    public msj: Message;
-    public devices: Array<number>  = [];
-    messages(){
-        this.dataApi.getAllMessages().subscribe((list :Message[]) => {
-        this.messagesList = list;
-        for(var i = 0; i < list.length; i++){
-          this.msj = list[i];
-          devices.indexOf(this.msj) === -1 ? devices.push(this.msj) : console.log("This item already exists");
-          this.dataList1.push(+this.msj.value)
-          console.log(this.devices );
-        }
-        console.log(this.messagesList );
-      });
-    }
+    // lineChart
+    public dataList1:Array<number>  = [];
+    public dataList2:Array<number>  = [];
+    public dataList3:Array<number>  = [];
+    public lineChartData: Array<any> = [
+        { data: this.dataList1, label: this.devices[1] },
+        { data: this.dataList2, label: 'Device 2' },
+        { data: this.dataList3, label: 'Device 3' } 
+    ];
+
 }
