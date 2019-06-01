@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
 import { Observable } from 'rxjs';
 import { DataStored } from 'src/app/dataStored.model';
+import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 
 @Component({
     selector: 'app-charts',
     templateUrl: './charts.component.html',
     styleUrls: ['./charts.component.scss']
 })
-export class ChartsComponent implements OnInit {
+export class ChartsComponent implements OnInit, OnChanges {
+     @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
     // bar chart
     public barChartOptions: any = {
@@ -19,7 +21,7 @@ export class ChartsComponent implements OnInit {
     public barChartLabels: string[] = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
     public barChartType: string;
     public barChartLegend: boolean;
-
+   
     public barChartData: any[] = [
         { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
         { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
@@ -74,10 +76,14 @@ export class ChartsComponent implements OnInit {
         'June',
         'July',
         'August',
+        'June',
+        'July',
+        'August',
         'September',
         'October',
         'November',
-        'December'
+        'December',
+        'dec2'
     ];
     public lineChartOptions: any = {
         responsive: true
@@ -144,10 +150,12 @@ export class ChartsComponent implements OnInit {
          * assign it;
          */
     }
-    public messagesList = new Array<Message>();
-    public dataValues = new Array<Array<number>>();
-    public devices = new Array<string>();
+    public messagesList = new Array<Message>(); 
+    public  let dataValues = new Array<Array<number>>();
+    public  devices = new Array<string>();
+    public lineChartData: Array<any> = [];
 
+    private loaded:boolean = false;
     messages(){
         this.dataApi.getAllMessages().subscribe((list :Message[]) => {
         this.messagesList = list;
@@ -161,40 +169,28 @@ export class ChartsComponent implements OnInit {
             }
         }
         //Assign variables
-        let dataList1 = this.dataValues[1];
-        console.log(this.devices);
-        console.log(this.dataList1);
-        console.log(this.dataValues[1]);
+        this.lineChartData.length = 0;
+        for(i=0; i < this.devices.length; i++){
+            console.log(i);
+            this.lineChartData.push({
+                label : this.devices[i],
+                data : this.dataValues[i]
+            });
+        }
+        this.loaded = true;
       });
     }
 
-    constructor(private dataApi: ApiService) {
-        this.messages();
-    }
+    constructor(private dataApi: ApiService) {}
 
     ngOnInit() {
         this.barChartType = 'bar';
         this.barChartLegend = true;
-        this.doughnutChartType = 'doughnut';
-        this.radarChartType = 'radar';
-
-        this.pieChartType = 'pie';
-        this.polarAreaLegend = true;
-        this.polarAreaChartType = 'polarArea';
         this.lineChartLegend = true;
         this.lineChartType = 'line';
-       
-       
+        this.messages();
     }
 
-    // lineChart
-    public dataList1:Array<number>  = [];
-    public dataList2:Array<number>  = [];
-    public dataList3:Array<number>  = [];
-    public lineChartData: Array<any> = [
-        { data: this.dataList1, label: this.devices[1] },
-        { data: this.dataList2, label: 'Device 2' },
-        { data: this.dataList3, label: 'Device 3' } 
-    ];
+}
 
 }

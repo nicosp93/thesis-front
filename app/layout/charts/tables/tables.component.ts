@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
@@ -12,6 +12,7 @@ export class TablesComponent implements OnInit {
     displayedColumns = [ 'sensorId', 'name', 'value', 'time','date'];
     dataSource: MatTableDataSource<Message>;
 
+    @Input() public perdevice: boolean = false;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
@@ -29,6 +30,12 @@ export class TablesComponent implements OnInit {
     ngOnInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+
+        if(this.perdevice){
+            console.log("si");
+        }else{
+            console.log("no");
+        }
     }
 
     applyFilter(filterValue: string) {
@@ -40,4 +47,3 @@ export class TablesComponent implements OnInit {
         }
     }
 }
-

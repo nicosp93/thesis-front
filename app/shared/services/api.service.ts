@@ -27,4 +27,9 @@ export class ApiService{
         return this.http.get(url_api);
     }
 
+    getLastMsjPerDev(){
+        const url_api =   Configuration.server + '/getlastmessagesperdevice';
+        return this.http.get(url_api);
+    }
+
 }

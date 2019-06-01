@@ -10,7 +10,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: 'dashboard'
+                redirectTo: 'charts'
             },
             {
                 path: 'dashboard',

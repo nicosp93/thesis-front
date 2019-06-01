@@ -1,30 +1,41 @@
 <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
     <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
-        <div [fxFlex]="75">
-            <mat-card>
+        <div [fxFlex]="100">
+            <mat-card >
                 <mat-card-header>
                     <mat-card-title>Data received</mat-card-title>
                 </mat-card-header>
-                <mat-card-content>
-                    <canvas baseChart width="500" height="200" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
-                        [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)"></canvas>
+                <mat-card-content *ngIf="loaded">
+                    <canvas baseChart  width="500" height="200" 
+                        [datasets]="lineChartData"  
+                        [labels]="lineChartLabels" 
+                        [options]="lineChartOptions"
+                        [colors]="lineChartColors" 
+                        [legend]="lineChartLegend" 
+                        [chartType]="lineChartType" 
+                        (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
                 </mat-card-content>
             </mat-card>
-        </div>
-        <div [fxFlex]="25">
-            <app-date-picker-from></app-date-picker-from>
-            <app-date-picker-to></app-date-picker-to>
         </div>
     </div>
 </div>
 <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
-    <div [fxFlex]="100">
+    <div [fxFlex]="50">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>Last messages received</mat-card-title>
+                <mat-card-title>Last messages received - GENERAL</mat-card-title>
             </mat-card-header>
-            <app-tables></app-tables>
+            <app-tables [perdevice]="false"></app-tables>
+        </mat-card>
+    </div>
+     <div [fxFlex]="50">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Last messages received - PER DEVICE</mat-card-title>
+            </mat-card-header>
+            <app-tables [perdevice]="true"></app-tables>
         </mat-card>
     </div>
 </div>
