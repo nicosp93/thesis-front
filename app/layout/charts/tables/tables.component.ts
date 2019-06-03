@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild,Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
@@ -9,6 +9,7 @@ import { Message } from 'src/app/message.model';
     styleUrls: ['./tables.component.scss']
 })
 export class TablesComponent implements OnInit {
+    public ready:boolean = true;
     displayedColumns = [ 'sensorId', 'name', 'value', 'time','date'];
     dataSource: MatTableDataSource<Message>;
 
@@ -17,25 +18,27 @@ export class TablesComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private dataApi: ApiService) {
-        // Get last 20 messages
-        const users: Message[] = [];
-        this.dataApi.getAllMessages().subscribe((list :Message[]) => {
-            this.dataSource.data = list.slice(0, 20);
-        }
+        const msj: Message[] = [];
         // Assign the data to the data source for the table to render
-        this.dataSource = new MatTableDataSource(users);
-        console.log(this.dataSource);
+        this.dataSource = new MatTableDataSource(msj);
     }
 
     ngOnInit() {
+        if(!this.perdevice){
+            this.dataApi.getAllMessages().subscribe((list :Message[]) => {
+                this.dataSource.data = list.slice(0, 20);
+                console.log(this.dataSource);
+                this.ready=true;
+            });
+        }else{
+            this.dataApi.getLastMsjPerDev().subscribe((list :Message[]) => {
+                this.dataSource.data = list.slice(0, 20);
+                console.log(this.dataSource);
+                this.ready=true;
+            });
+        }
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
-        if(this.perdevice){
-            console.log("si");
-        }else{
-            console.log("no");
-        }
     }
 
     applyFilter(filterValue: string) {
@@ -47,3 +50,8 @@ export class TablesComponent implements OnInit {
         }
     }
 }
+
+
+
+
+

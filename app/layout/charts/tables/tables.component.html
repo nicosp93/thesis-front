@@ -1,4 +1,8 @@
-<div class="mat-elevation-z1">
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
         <!-- Progress Column -->
@@ -33,5 +37,5 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator [pageSize]="3" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
 import { Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import { BaseChartDirective } from 'ng2-charts/ng2-charts';
     templateUrl: './charts.component.html',
     styleUrls: ['./charts.component.scss']
 })
-export class ChartsComponent implements OnInit, OnChanges {
+export class ChartsComponent implements OnInit {
      @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
     // bar chart
@@ -151,11 +151,11 @@ export class ChartsComponent implements OnInit, OnChanges {
          */
     }
     public messagesList = new Array<Message>(); 
-    public  let dataValues = new Array<Array<number>>();
-    public  devices = new Array<string>();
+    public dataValues = new Array<Array<number>>();
+    public devices = new Array<string>();
     public lineChartData: Array<any> = [];
 
-    private loaded:boolean = false;
+    public loaded:boolean = false;
     messages(){
         this.dataApi.getAllMessages().subscribe((list :Message[]) => {
         this.messagesList = list;
@@ -170,11 +170,10 @@ export class ChartsComponent implements OnInit, OnChanges {
         }
         //Assign variables
         this.lineChartData.length = 0;
-        for(i=0; i < this.devices.length; i++){
-            console.log(i);
+        for(let n=0; n < this.devices.length; n++){
             this.lineChartData.push({
-                label : this.devices[i],
-                data : this.dataValues[i]
+                label : this.devices[n],
+                data : this.dataValues[n]
             });
         }
         this.loaded = true;
@@ -193,4 +192,4 @@ export class ChartsComponent implements OnInit, OnChanges {
 
 }
 
-}
+
