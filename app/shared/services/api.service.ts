@@ -32,4 +32,9 @@ export class ApiService{
         return this.http.get(url_api);
     }
 
+    getLastWeek(){
+        const url_api =   Configuration.server + '/getlastweek';
+        return this.http.get(url_api);
+    }
+
 }

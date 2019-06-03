@@ -155,17 +155,42 @@ export class ChartsComponent implements OnInit {
     public devices = new Array<string>();
     public lineChartData: Array<any> = [];
 
+    public today: Date = new Date();
     public loaded:boolean = false;
-    messages(){
-        this.dataApi.getAllMessages().subscribe((list :Message[]) => {
+    lastWeekMessages(){
+        var day_one: Date = new Date();day_one.setDate(this.today.getDate() -1);
+        var day_two: Date = new Date();day_two.setDate(this.today.getDate() -2);
+        var day_three: Date = new Date();day_three.setDate(this.today.getDate() -3);
+        var day_four: Date = new Date();day_four.setDate(this.today.getDate() -4);
+        var day_five: Date = new Date();day_five.setDate(this.today.getDate() -5);
+        var day_six: Date = new Date();day_six.setDate(this.today.getDate() -6);
+        this.lineChartLabels = [this.today.toString().substring(0,15), day_one.toString().substring(0,15), day_two.toString().substring(0,15), day_three.toString().substring(0,15), day_four.toString().substring(0,15), day_five.toString().substring(0,15), day_six.toString().substring(0,15)];
+        var lastDatePerDevice  = new Array<Date>();
+        this.dataApi.getLastWeek().subscribe((list :Message[]) => {
         this.messagesList = list;
         for( let i = 0; i <  list.length; i++){
             if(this.devices.indexOf(list[i].sensorId) === -1 ){
                 this.devices.push(list[i].sensorId);
+                lastDatePerDevice.push(list[i].date);
                 var arrayAux: number[] = [+list[i].value];
                 this.dataValues.push(arrayAux);
+                console.log("Del Device:"+this.devices[this.devices.length-1]);
+                console.log ("Nuevo deviceId:"+ this.devices[this.devices.length-1]);
+                console.log("Nueva ultima fecha:"+ lastDatePerDevice[this.devices.length-1]);
+                console.log("Numero total de devices actual:"+ this.devices.length);
             } else {
-                 this.dataValues[this.devices.indexOf(list[i].sensorId)].push(+list[i].value);
+                console.log("Del Device:"+this.devices[this.devices.indexOf(list[i].sensorId)]);
+                if(this.sameDayOfWeek(list[i].date, lastDatePerDevice[this.devices.indexOf(list[i].sensorId)] )){
+                    var oldValue :number = this.dataValues[this.devices.indexOf(list[i].sensorId)][this.dataValues[this.devices.indexOf(list[i].sensorId)].length-1];
+                    var newValue :number = +list[i].value;
+                    var average  :number = (oldValue+newValue)/2;
+                    console.log("Same date, So Average of "+ newValue +" and "+ oldValue +" is "+ average);
+                    this.dataValues[this.devices.indexOf(list[i].sensorId)][0] = average;
+                }else{
+                     this.dataValues[this.devices.indexOf(list[i].sensorId)].push(+list[i].value);
+                     lastDatePerDevice[this.devices.indexOf(list[i].sensorId)] = list[i].date;
+                     console.log("Wasnt the same date, so we add new last date"+ lastDatePerDevice[this.devices.indexOf(list[i].sensorId)]);
+                }
             }
         }
         //Assign variables
@@ -177,6 +202,8 @@ export class ChartsComponent implements OnInit {
             });
         }
         this.loaded = true;
+        console.log(this.lineChartData);
+        console.log(lastDatePerDevice);
       });
     }
 
@@ -187,7 +214,16 @@ export class ChartsComponent implements OnInit {
         this.barChartLegend = true;
         this.lineChartLegend = true;
         this.lineChartType = 'line';
-        this.messages();
+        this.lastWeekMessages();
+    }
+
+    sameDayOfWeek( date1: Date, date2: Date): boolean {
+        console.log("Evaluating if same date: "+date1.toString()+ " and "+ date2.toString());
+        if (date1 == date2) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
