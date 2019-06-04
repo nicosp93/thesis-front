@@ -1,0 +1,11 @@
+<mat-card>
+    <mat-card-content>
+        <mat-form-field class="example-user-input">
+            <mat-select placeholder="Type Of Data" [formControl]="position">
+                <mat-option *ngFor="let positionOption of typeOfData" [value]="typeOfData">
+                    {{ positionOption }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>

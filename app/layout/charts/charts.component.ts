@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Message } from 'src/app/message.model';
 import { Observable } from 'rxjs';
 import { DataStored } from 'src/app/dataStored.model';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
+import { ToolTipComponent } from './tool-tip/tool-tip.component';
 
 @Component({
     selector: 'app-charts',
@@ -11,7 +12,14 @@ import { BaseChartDirective } from 'ng2-charts/ng2-charts';
     styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent implements OnInit {
-     @ViewChild(BaseChartDirective) chart: BaseChartDirective;
+    typeOfData: string[] ;
+
+    @ViewChild(ToolTipComponent)
+    set typeOfInfo(component: ToolTipComponent){
+        this.typeOfData = component.position;
+        console.log("leo del hijo:");
+        console.log(this.typeOfData);
+    }
 
     // bar chart
     public barChartOptions: any = {
@@ -166,7 +174,7 @@ export class ChartsComponent implements OnInit {
         var day_six: Date = new Date();day_six.setDate(this.today.getDate() -6);
         this.lineChartLabels = [this.today.toString().substring(0,15), day_one.toString().substring(0,15), day_two.toString().substring(0,15), day_three.toString().substring(0,15), day_four.toString().substring(0,15), day_five.toString().substring(0,15), day_six.toString().substring(0,15)];
         var lastDatePerDevice  = new Array<Date>();
-        this.dataApi.getLastWeek().subscribe((list :Message[]) => {
+        this.dataApi.getLastWeek(this.typeOfData).subscribe((list :Message[]) => {
         this.messagesList = list;
         for( let i = 0; i <  list.length; i++){
             if(this.devices.indexOf(list[i].sensorId) === -1 ){

@@ -23,7 +23,7 @@ export class ApiService{
     }
 
     createUser(username, firstname, lastname, password){
-        const url_api =  Configuration.server + '/register?username='+ username +'&firstName='+ firstname + '&lastName='+ lastname + '&password='+ password;
+        const url_api =  Configuration.server + '/register?username=' + username +'&firstName='+ firstname + '&lastName='+ lastname + '&password='+ password;
         return this.http.get(url_api);
     }
 
@@ -32,8 +32,12 @@ export class ApiService{
         return this.http.get(url_api);
     }
 
-    getLastWeek(){
-        const url_api =   Configuration.server + '/getlastweek';
+    getLastWeek(typeOfData){
+        const url_api =   Configuration.server + '/getlastweek?name=' + typeOfData;
+        return this.http.get(url_api);
+    }
+    getTypeOfData(){
+        const url_api =   Configuration.server + '/gettypeofdata';
         return this.http.get(url_api);
     }
 
