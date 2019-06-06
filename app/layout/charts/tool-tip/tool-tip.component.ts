@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter  } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TooltipPosition } from '@angular/material';
 import { ApiService } from 'src/app/shared/services/api.service';
+
+
+
 
 @Component({
     selector: 'app-tool-tip',
@@ -10,8 +13,16 @@ import { ApiService } from 'src/app/shared/services/api.service';
 })
 export class ToolTipComponent implements OnInit {
     typeOfData: string[] = [];
+    dataSelected: string = "";
+    @Input() dataType: string;
 
-    position = null;
+    @Output() talk: EventEmitter<string> = new EventEmitter<string>();
+
+    talkBack(say: string) {
+        this.talk.emit(say);
+    }
+
+    position =  new FormControl(this.typeOfData[0]);
 
     constructor(private dataApi: ApiService) {
         this.dataApi.getTypeOfData().subscribe((values :string[]) => {
@@ -20,8 +31,13 @@ export class ToolTipComponent implements OnInit {
                 this.typeOfData.push(values[i]);
             }
         });
-        this.position = new FormControl(this.typeOfData[0]);
+        this.position.setValue(this.typeOfData[0]);
     }
 
     ngOnInit() {}
+
+    changeOption(event){
+        this.dataSelected = event;
+        this.talkBack(this.dataSelected);
+    }
 }

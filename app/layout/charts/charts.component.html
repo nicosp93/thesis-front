@@ -4,8 +4,10 @@
             <mat-card >
                 <mat-card-header>
                     <mat-card-title>Data received</mat-card-title>
+                    <mat-card-title> Showing : {{ dataType }}</mat-card-title>
+                   
                 </mat-card-header>
-                <app-tool-tip style="float: right;"></app-tool-tip>
+                <app-tool-tip style="float: right;" [dataType]="dataType" (talk)="talkBack($event)" ></app-tool-tip>
                 <mat-card-content *ngIf="loaded" >
                     <canvas baseChart  width="500" height="200" 
                         [datasets]="lineChartData"  

@@ -12,15 +12,19 @@ import { ToolTipComponent } from './tool-tip/tool-tip.component';
     styleUrls: ['./charts.component.scss']
 })
 export class ChartsComponent implements OnInit {
-    typeOfData: string[] ;
+    typeOfData: string ;
 
     @ViewChild(ToolTipComponent)
     set typeOfInfo(component: ToolTipComponent){
-        this.typeOfData = component.position;
-        console.log("leo del hijo:");
-        console.log(this.typeOfData);
+        setTimeout(() => { 
+            this.typeOfData = component.dataSelected;
+            console.log("leo del hijo:");
+            console.log(component.dataSelected);
+        }, 100);
     }
+    @ViewChild(ToolTipComponent) test2: ToolTipComponent;
 
+    dataType: string;
     // bar chart
     public barChartOptions: any = {
         scaleShowVerticalLines: false,
@@ -158,24 +162,27 @@ export class ChartsComponent implements OnInit {
          * assign it;
          */
     }
-    public messagesList = new Array<Message>(); 
     public dataValues = new Array<Array<number>>();
     public devices = new Array<string>();
     public lineChartData: Array<any> = [];
 
-    public today: Date = new Date();
+    public 
     public loaded:boolean = false;
     lastWeekMessages(){
-        var day_one: Date = new Date();day_one.setDate(this.today.getDate() -1);
-        var day_two: Date = new Date();day_two.setDate(this.today.getDate() -2);
-        var day_three: Date = new Date();day_three.setDate(this.today.getDate() -3);
-        var day_four: Date = new Date();day_four.setDate(this.today.getDate() -4);
-        var day_five: Date = new Date();day_five.setDate(this.today.getDate() -5);
-        var day_six: Date = new Date();day_six.setDate(this.today.getDate() -6);
-        this.lineChartLabels = [this.today.toString().substring(0,15), day_one.toString().substring(0,15), day_two.toString().substring(0,15), day_three.toString().substring(0,15), day_four.toString().substring(0,15), day_five.toString().substring(0,15), day_six.toString().substring(0,15)];
+        this.loaded= false;
+        this.clearVariables();
+        console.log("Test");
+        console.log(this.dataType);
+        var today: Date = new Date();
+        var day_one: Date = new Date();day_one.setDate(today.getDate() -1);
+        var day_two: Date = new Date();day_two.setDate(today.getDate() -2);
+        var day_three: Date = new Date();day_three.setDate(today.getDate() -3);
+        var day_four: Date = new Date();day_four.setDate(today.getDate() -4);
+        var day_five: Date = new Date();day_five.setDate(today.getDate() -5);
+        var day_six: Date = new Date();day_six.setDate(today.getDate() -6);
+        this.lineChartLabels = [today.toString().substring(0,15), day_one.toString().substring(0,15), day_two.toString().substring(0,15), day_three.toString().substring(0,15), day_four.toString().substring(0,15), day_five.toString().substring(0,15), day_six.toString().substring(0,15)];
         var lastDatePerDevice  = new Array<Date>();
-        this.dataApi.getLastWeek(this.typeOfData).subscribe((list :Message[]) => {
-        this.messagesList = list;
+        this.dataApi.getLastWeek(this.dataType).subscribe((list :Message[]) => {
         for( let i = 0; i <  list.length; i++){
             if(this.devices.indexOf(list[i].sensorId) === -1 ){
                 this.devices.push(list[i].sensorId);
@@ -226,12 +233,26 @@ export class ChartsComponent implements OnInit {
     }
 
     sameDayOfWeek( date1: Date, date2: Date): boolean {
+        console.log(date1);
+         console.log(date2);
         console.log("Evaluating if same date: "+date1.toString()+ " and "+ date2.toString());
         if (date1 == date2) {
             return true;
         } else {
             return false;
         }
+    }
+
+    talkBack(e:string) {
+        this.dataType = e;
+        console.log(this.dataType);
+        this.lastWeekMessages()
+    }
+
+    clearVariables(){
+        this.dataValues = new Array<Array<number>>();
+        this.devices = new Array<string>();
+        this.lineChartData= new Array<any>();
     }
 
 }
