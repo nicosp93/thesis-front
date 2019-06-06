@@ -18,6 +18,7 @@ import { DatePickerComponent2 } from './date-picker2/date-picker.component';
 import { ToolTipComponent } from './tool-tip/tool-tip.component';
 import { TablesComponent } from './tables/tables.component';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
     imports: [
@@ -34,6 +35,6 @@ import { ApiService } from 'src/app/shared/services/api.service';
         FlexLayoutModule.withConfig({addFlexToParent: false})
     ],
     declarations: [ChartsComponent, DatePickerComponent, DatePickerComponent2, TablesComponent, ToolTipComponent],
-     providers: [ApiService]
+     providers: [ApiService, DatePipe]
 })
 export class ChartsModule {}

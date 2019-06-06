@@ -9,7 +9,7 @@
                 </mat-card-header>
                 <app-tool-tip style="float: right;" [dataType]="dataType" (talk)="talkBack($event)" ></app-tool-tip>
                 <mat-card-content *ngIf="loaded" >
-                    <canvas baseChart  width="500" height="200" 
+                    <canvas baseChart width="500" height="200" 
                         [datasets]="lineChartData"  
                         [labels]="lineChartLabels" 
                         [options]="lineChartOptions"

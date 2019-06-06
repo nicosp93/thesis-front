@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { DataStored } from 'src/app/dataStored.model';
 import { BaseChartDirective } from 'ng2-charts/ng2-charts';
 import { ToolTipComponent } from './tool-tip/tool-tip.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-charts',
@@ -182,6 +183,9 @@ export class ChartsComponent implements OnInit {
         var day_six: Date = new Date();day_six.setDate(today.getDate() -6);
         this.lineChartLabels = [today.toString().substring(0,15), day_one.toString().substring(0,15), day_two.toString().substring(0,15), day_three.toString().substring(0,15), day_four.toString().substring(0,15), day_five.toString().substring(0,15), day_six.toString().substring(0,15)];
         var lastDatePerDevice  = new Array<Date>();
+        
+
+
         this.dataApi.getLastWeek(this.dataType).subscribe((list :Message[]) => {
         for( let i = 0; i <  list.length; i++){
             if(this.devices.indexOf(list[i].sensorId) === -1 ){
@@ -209,6 +213,9 @@ export class ChartsComponent implements OnInit {
             }
         }
         //Assign variables
+        var weeklyValues  = new Array<Array<number>>();
+
+
         this.lineChartData.length = 0;
         for(let n=0; n < this.devices.length; n++){
             this.lineChartData.push({
@@ -222,14 +229,15 @@ export class ChartsComponent implements OnInit {
       });
     }
 
-    constructor(private dataApi: ApiService) {}
+    constructor(private dataApi: ApiService, private datePipe: DatePipe) {}
 
     ngOnInit() {
+        //BaseChartDirective.defaults.line.spanGaps = true;
         this.barChartType = 'bar';
         this.barChartLegend = true;
         this.lineChartLegend = true;
         this.lineChartType = 'line';
-        this.lastWeekMessages();
+        this.lastWeeklyMessages();
     }
 
     sameDayOfWeek( date1: Date, date2: Date): boolean {
@@ -246,13 +254,87 @@ export class ChartsComponent implements OnInit {
     talkBack(e:string) {
         this.dataType = e;
         console.log(this.dataType);
-        this.lastWeekMessages()
+        this.lastWeeklyMessages()
     }
 
     clearVariables(){
         this.dataValues = new Array<Array<number>>();
         this.devices = new Array<string>();
         this.lineChartData= new Array<any>();
+    }
+
+    lastWeeklyMessages(){
+        this.loaded= false;
+        this.clearVariables();
+        console.log("Test");
+        console.log(this.dataType);
+        var today: Date = new Date();
+        var day_one: Date = new Date();day_one.setDate(today.getDate() -1);
+        var day_two: Date = new Date();day_two.setDate(today.getDate() -2);
+        var day_three: Date = new Date();day_three.setDate(today.getDate() -3);
+        var day_four: Date = new Date();day_four.setDate(today.getDate() -4);
+        var day_five: Date = new Date();day_five.setDate(today.getDate() -5);
+        var day_six: Date = new Date();day_six.setDate(today.getDate() -6);
+        this.lineChartLabels = [this.datePipe.transform(today, "yyyy-MM-dd"),this.datePipe.transform(day_one, "yyyy-MM-dd"),this.datePipe.transform(day_two, "yyyy-MM-dd"), this.datePipe.transform(day_three, "yyyy-MM-dd"), this.datePipe.transform(day_four, "yyyy-MM-dd"), this.datePipe.transform(day_five, "yyyy-MM-dd"), this.datePipe.transform(day_six, "yyyy-MM-dd")];
+        var lastDatePerDevice  = new Array<Date>();
+        this.dataApi.getLastWeek(this.dataType).subscribe((list :Message[]) => {
+        for( let i = 0; i <  list.length; i++){
+            if(this.devices.indexOf(list[i].sensorId) === -1 ){
+                this.devices.push(list[i].sensorId);
+                lastDatePerDevice.push(list[i].date);
+                var arrayAux: number[] = [+list[i].value];
+                this.setValueInDayOfWeek(list[i], true);
+                console.log("Del Device:"+this.devices[this.devices.length-1]);
+                console.log ("Nuevo deviceId:"+ this.devices[this.devices.length-1]);
+                console.log("Nueva ultima fecha:"+ lastDatePerDevice[this.devices.length-1]);
+                console.log("Numero total de devices actual:"+ this.devices.length);
+            } else {
+                console.log("Del Device:"+this.devices[this.devices.indexOf(list[i].sensorId)]);
+                if(this.sameDayOfWeek(list[i].date, lastDatePerDevice[this.devices.indexOf(list[i].sensorId)] )){
+                    var oldValue :number = this.dataValues[this.devices.indexOf(list[i].sensorId)][this.lineChartLabels.indexOf(list[i].date)];
+                    var newValue :number = +list[i].value;
+                    var average  :number = (oldValue+newValue)/2;
+                    console.log("Same date, So Average of "+ newValue +" and "+ oldValue +" is "+ average);
+                    this.dataValues[this.devices.indexOf(list[i].sensorId)][this.lineChartLabels.indexOf(list[i].date)] = average;
+                }else{
+                    this.setValueInDayOfWeek(list[i], false);
+                    lastDatePerDevice[this.devices.indexOf(list[i].sensorId)] = list[i].date;
+                    console.log("Wasnt the same date, so we add new date"+ lastDatePerDevice[this.devices.indexOf(list[i].sensorId)]);
+                }
+            }
+        }
+        //Assign variables
+        var weeklyValues  = new Array<Array<number>>();
+
+
+        this.lineChartData.length = 0;
+        for(let n=0; n < this.devices.length; n++){
+            this.lineChartData.push({
+                label : this.devices[n],
+                data : this.dataValues[n]
+            });
+        }
+        console.log("LastThings");
+        console.log(this.lineChartData);
+        console.log(lastDatePerDevice);
+        console.log(this.dataValues);
+        console.log("LastThings");
+        this.loaded = true;
+        
+      });
+    }
+
+    setValueInDayOfWeek(item: Message, firstTime:Boolean){
+        if(firstTime){
+            var fixLenght: Array<number> = [null, null, null, null, null, null, null];
+            this.dataValues.push(fixLenght);
+            console.log("dateaverno");
+            console.log(item.date);
+            console.log(this.lineChartLabels);
+            this.dataValues[this.dataValues.length-1][this.lineChartLabels.indexOf(item.date)] = +item.value;
+        }else{
+            this.dataValues[this.devices.indexOf(item.sensorId)][this.lineChartLabels.indexOf(item.date)] = +item.value;
+        }
     }
 
 }
