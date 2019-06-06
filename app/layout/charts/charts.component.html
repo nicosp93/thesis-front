@@ -3,9 +3,8 @@
         <div [fxFlex]="100">
             <mat-card >
                 <mat-card-header>
-                    <mat-card-title>Data received</mat-card-title>
+                    <mat-card-title>Last seven Days</mat-card-title>
                     <mat-card-title> Showing : {{ dataType }}</mat-card-title>
-                   
                 </mat-card-header>
                 <app-tool-tip style="float: right;" [dataType]="dataType" (talk)="talkBack($event)" ></app-tool-tip>
                 <mat-card-content *ngIf="loaded" >
@@ -46,13 +45,23 @@
     <div [fxFlex]="70">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>Bar Chart</mat-card-title>
+                    <mat-card-title>Last 24 Hours</mat-card-title>
+                    <mat-card-title> Showing : {{ dataTypeToday }}</mat-card-title>
             </mat-card-header>
-            <mat-card-content>
-                <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-                    [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-            </mat-card-content>
-        </mat-card>
+                <app-tool-tip style="float: right;" [dataType]="dataTypeToday" (talk)="talkBackToday($event)" ></app-tool-tip>
+                <mat-card-content *ngIf="loadedToday">
+                    <canvas baseChart width="500" height="200" 
+                        [datasets]="lineChartDataToday"  
+                        [labels]="lineChartLabelsToday" 
+                        [options]="lineChartOptions"
+                        [colors]="lineChartColors" 
+                        [legend]="lineChartLegend" 
+                        [chartType]="lineChartType" 
+                        (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)">
+                    </canvas>
+                </mat-card-content>
+            </mat-card>
     </div>
     <div [fxFlex]="30">
          <mat-card>
