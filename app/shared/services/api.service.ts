@@ -40,5 +40,9 @@ export class ApiService{
         const url_api =   Configuration.server + '/gettypeofdata';
         return this.http.get(url_api);
     }
+    getLast24hours(typeOfData){
+        const url_api =   Configuration.server + '/getlast24hours?name=' + typeOfData;
+        return this.http.get(url_api);
+    }
 
 }

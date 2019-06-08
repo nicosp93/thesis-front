@@ -18,7 +18,8 @@ export class ChartsComponent implements OnInit {
 
     public lineChartLabels: Array<any> = [];
     public lineChartOptions: any = {
-        responsive: true
+        responsive: true,
+        spanGaps: true
     };
     public lineChartColors: Array<any> = [
         {
@@ -81,8 +82,6 @@ export class ChartsComponent implements OnInit {
 
     ngOnInit() {
         //BaseChartDirective.defaults.line.spanGaps = true;
-        this.barChartType = 'bar';
-        this.barChartLegend = true;
         this.lineChartLegend = true;
         this.lineChartType = 'line';
         this.lastWeeklyMessages();
@@ -107,8 +106,12 @@ export class ChartsComponent implements OnInit {
         this.dataValues = new Array<Array<number>>();
         this.devices = new Array<string>();
         this.lineChartData= new Array<any>();
-        this.lineChartDataToday = new Array<any>();
-        this.lineChartLabelsToday= new Array<string>();
+    }
+    clearVariablesToday(){
+        this.dataValuesToday = new Array<Array<number>>();
+        this.lineChartLabelsToday  = new Array<string>();
+		this.devicesToday  = new Array<string>();
+		this.lineChartDataToday= new Array<any>();
     }
 
     lastWeeklyMessages(){
@@ -155,7 +158,6 @@ export class ChartsComponent implements OnInit {
         console.log(lastDatePerDevice);
         console.log(this.dataValues);
         this.loaded = true;
-        
       });
     }
 
@@ -170,13 +172,42 @@ export class ChartsComponent implements OnInit {
     }
 
     public dataTypeToday:string ="temperature_1";
-    public lineChartDataToday = new Array<any>();
-    public lineChartLabelsToday: Array<any> = [];
+    public dataValuesToday = new Array<Array<number>>();
+    public devicesToday = new Array<string>();
+    public lineChartLabelsToday: Array<string> = [];
     public loadedToday:boolean = false;
+    public lineChartDataToday: Array<any> = [];
     last24hours(){
-        this.loaded= false;
-        this.setChartLabelHours();
+        this.loadedToday= false;
+        this.clearVariablesToday();
+
+        this.dataApi.getLast24hours(this.dataTypeToday).subscribe((list :Message[]) => {
+            for( let i = 0; i <  list.length; i++){
+            	this.lineChartLabelsToday.push(list[i].time);
+            }
+        	for( let i = 0; i <  list.length; i++){
+                if(this.devicesToday.indexOf(list[i].sensorId) === -1 ){
+                    this.devicesToday.push(list[i].sensorId);
+                    this.setValueInTime(list[i],true);
+                } else {
+                    this.setValueInTime(list[i],false);
+                }
+        }
+        //Assign variables
+        this.lineChartDataToday.length = 0;
+        for(let n=0; n < this.devicesToday.length; n++){
+            this.lineChartDataToday.push({
+                label : this.devicesToday[n],
+                data : this.dataValuesToday[n]
+            });
+        }
+        console.log("TODAY");
+        console.log(this.dataValuesToday);
+         console.log(this.devicesToday);
+        console.log(this.lineChartDataToday);
         console.log(this.lineChartLabelsToday);
+        this.loadedToday = true;
+      });
     }
 
     talkBackToday(e:string) {
@@ -191,6 +222,20 @@ export class ChartsComponent implements OnInit {
             iter_date.setHours(iter_date.getHours() -1);
             var iter_str: string = this.datePipe.transform(iter_date,"hh:mm:ss");
             this.lineChartLabelsToday.push(iter_str);
+        }
+    }
+    setValueInTime(item: Message, firstTime:Boolean){
+        if(firstTime){
+            var arrayAux: Array<number> = [];
+            for(let i=0; i < this.lineChartLabelsToday.length;i++){
+            	arrayAux.push(null);
+            }
+            console.log("fix lenght array");
+            console.log(arrayAux);
+            this.dataValuesToday.push(arrayAux);
+            this.dataValuesToday[this.devicesToday.indexOf(item.sensorId)][this.lineChartLabelsToday.indexOf(item.time)] = +item.value;
+        }else{
+        	this.dataValuesToday[this.devicesToday.indexOf(item.sensorId)][this.lineChartLabelsToday.indexOf(item.time)] = +item.value;
         }
     }
 }

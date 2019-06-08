@@ -14,9 +14,7 @@
                         [options]="lineChartOptions"
                         [colors]="lineChartColors" 
                         [legend]="lineChartLegend" 
-                        [chartType]="lineChartType" 
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)">
+                        [chartType]="lineChartType" >
                     </canvas>
                 </mat-card-content>
             </mat-card>
@@ -42,7 +40,7 @@
     </div>
 </div>
 <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
-    <div [fxFlex]="70">
+    <div [fxFlex]="100">
         <mat-card>
             <mat-card-header>
                     <mat-card-title>Last 24 Hours</mat-card-title>
@@ -56,22 +54,10 @@
                         [options]="lineChartOptions"
                         [colors]="lineChartColors" 
                         [legend]="lineChartLegend" 
-                        [chartType]="lineChartType" 
-                        (chartHover)="chartHovered($event)"
-                        (chartClick)="chartClicked($event)">
+                        [chartType]="lineChartType" >
                     </canvas>
                 </mat-card-content>
             </mat-card>
-    </div>
-    <div [fxFlex]="30">
-         <mat-card>
-            <mat-card-header>
-                <p>Highest temperatures per month</p>
-            </mat-card-header>
-            <mat-card-content>
-                <app-tables></app-tables>
-            </mat-card-content>
-        </mat-card>
     </div>
 </div>
 
