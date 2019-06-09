@@ -1,27 +1,45 @@
-<h1 mat-dialog-title>Insert Data of the new User</h1>
+
 <div mat-dialog-content>
-    <p>Username:
-        <mat-form-field>
-            <input type="text" matInput [(ngModel)]="data.username">
-        </mat-form-field>
+<h1 mat-dialog-title>Insert Data of the new User</h1>
+	<p>
+    <mat-form-field appearance="standard">
+	    <mat-label>Username</mat-label>
+	    <input matInput placeholder="username" [(ngModel)]="data.username">
+	    <mat-hint>Must be unique</mat-hint>
+  	</mat-form-field>
+  	</p>
+    <p>
+    <mat-form-field appearance="standard">
+	    <mat-label>First Name</mat-label>
+	    <input matInput placeholder="firstname" [(ngModel)]="data.firstName">
+  	</mat-form-field>
+  	</p>
+    <p>
+    <mat-form-field appearance="standard">
+	    <mat-label>Last Name</mat-label>
+	    <input matInput placeholder="lastname" [(ngModel)]="data.lastName">
+  	</mat-form-field>
     </p>
-    
-    <p>First Name:
-        <mat-form-field>
-            <input type="text" matInput [(ngModel)]="data.firstName">
-        </mat-form-field>
-    </p>
-    <p>Last Name:
-        <mat-form-field>
-            <input type="text" matInput [(ngModel)]="data.lastName">
-        </mat-form-field>
-    </p>
-    <p>Password:
-        <mat-form-field>
+    <p>
+    <mat-form-field appearance="standard">
+	    <mat-label>Admin</mat-label>
+	    <input matInput placeholder="admin" [(ngModel)]="data.admin">
+	    <mat-hint>1 or 0</mat-hint>
+  	</mat-form-field>
+  	</p>
+    <p>
+    <mat-form-field appearance="standard">
+	    <mat-label>Subscription to Devices</mat-label>
+	    <input matInput placeholder="devices" [(ngModel)]="data.devices">
+	    <mat-hint>Each name separated by ','</mat-hint>
+  	</mat-form-field>
+  	</p>
+    <p>
+    <mat-form-field appearance="standard">
+	    <mat-label>Password</mat-label>
             <input type="password" matInput [(ngModel)]="data.password">
         </mat-form-field>
     </p>
-    
 </div>
 <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Back</button>

@@ -4,6 +4,7 @@ import { ApiService } from 'src/app/shared/services/api.service';
 import { Configuration} from '../app.constants';
 import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/user.model';
 
 @Component({
     selector: 'app-wrong-pass',
@@ -32,6 +33,9 @@ export class LoginComponent implements OnInit {
         this.response = this.login(this.user, this.pass);
         if(this.response){
             localStorage.setItem('isLoggedin', 'true');
+            this.dataApi.getUser(this.user).subscribe( (userE:User) =>  {
+            	 localStorage.setItem('isAdmin', userE.admin.toString());
+            });
             this.router.navigate(['/charts'] );
         }else{
             this.openWrongPass();

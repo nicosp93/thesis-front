@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatTableModule, MatCardModule } from '@angular/material';
 import { MatFormFieldModule, MatPaginatorModule, MatDialogModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DialogOverviewComponent } from './dialog-overview/dialog-overview.component';
 import { DialogComponent } from './dialog/dialog.component';
@@ -10,6 +11,9 @@ import { TablesRoutingModule } from './tables-routing.module';
 import { TablesComponent } from './tables.component';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { MatSnackBar } from '@angular/material';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { NotAdminComponent } from './dialog/dialog.component';
 
 @NgModule({
     imports: [
@@ -21,10 +25,12 @@ import { ApiService } from 'src/app/shared/services/api.service';
         FormsModule,
         MatPaginatorModule,
         MatInputModule,
-        MatDialogModule
+        MatSnackBarModule,
+        MatDialogModule,
+        FlexLayoutModule
     ],
-    declarations: [TablesComponent, DialogComponent, DialogOverviewComponent],
-    entryComponents: [DialogOverviewComponent],
-    providers:[ApiService],
+    declarations: [TablesComponent, DialogComponent, DialogOverviewComponent, NotAdminComponent],
+    providers:[ApiService, MatSnackBar],
+    entryComponents: [DialogOverviewComponent, NotAdminComponent]
 })
 export class TablesModule {}

@@ -81,7 +81,6 @@ export class ChartsComponent implements OnInit {
     constructor(private dataApi: ApiService, private datePipe: DatePipe) {}
 
     ngOnInit() {
-        //BaseChartDirective.defaults.line.spanGaps = true;
         this.lineChartLegend = true;
         this.lineChartType = 'line';
         this.lastWeeklyMessages();
@@ -203,7 +202,7 @@ export class ChartsComponent implements OnInit {
         }
         console.log("TODAY");
         console.log(this.dataValuesToday);
-         console.log(this.devicesToday);
+        console.log(this.devicesToday);
         console.log(this.lineChartDataToday);
         console.log(this.lineChartLabelsToday);
         this.loadedToday = true;

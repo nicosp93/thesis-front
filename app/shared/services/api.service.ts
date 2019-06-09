@@ -22,8 +22,9 @@ export class ApiService{
         return this.http.get(url_api);
     }
 
-    createUser(username, firstname, lastname, password){
-        const url_api =  Configuration.server + '/register?username=' + username +'&firstName='+ firstname + '&lastName='+ lastname + '&password='+ password;
+
+    createUser(username, firstname, lastname, admin, password){
+        const url_api =  Configuration.server + '/register?admin='+ admin + '&firstName=' + firstname + '&lastName=' + lastname + '&username=' + username + '&pasword=' + password;
         return this.http.get(url_api);
     }
 
@@ -42,6 +43,19 @@ export class ApiService{
     }
     getLast24hours(typeOfData){
         const url_api =   Configuration.server + '/getlast24hours?name=' + typeOfData;
+        return this.http.get(url_api);
+    }
+    getUsers(){
+    	const url_api =   Configuration.server + '/getusers';
+        return this.http.get(url_api);
+    }
+    getUser(username){
+    	const url_api =   Configuration.server + '/getuser?username=' + username;
+        return this.http.get(url_api);
+    }
+    subscribeToDevice(username, devices:string[]){
+		console.log("device:"+devices);
+		const url_api =   Configuration.server + '/setrelation?username=' + username + '&devices='+ devices;
         return this.http.get(url_api);
     }
 
