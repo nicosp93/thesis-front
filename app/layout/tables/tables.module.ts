@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatTableModule, MatCardModule } from '@angular/material';
-import { MatFormFieldModule, MatPaginatorModule, MatDialogModule } from '@angular/material';
+import { MatFormFieldModule, MatPaginatorModule, MatDialogModule, MatButtonModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -22,6 +22,7 @@ import { NotAdminComponent } from './dialog/dialog.component';
         MatTableModule,
         MatCardModule,
         MatFormFieldModule,
+        MatButtonModule,
         FormsModule,
         MatPaginatorModule,
         MatInputModule,
@@ -30,7 +31,7 @@ import { NotAdminComponent } from './dialog/dialog.component';
         FlexLayoutModule
     ],
     declarations: [TablesComponent, DialogComponent, DialogOverviewComponent, NotAdminComponent],
-    providers:[ApiService, MatSnackBar],
+    providers: [ApiService, MatSnackBar],
     entryComponents: [DialogOverviewComponent, NotAdminComponent]
 })
 export class TablesModule {}

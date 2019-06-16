@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialog, MatDialogRef, MatButtonModule } from '@angular/material';
 import { MatSnackBar } from '@angular/material';
 import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.component';
 
@@ -12,7 +12,7 @@ import { DialogOverviewComponent } from '../dialog-overview/dialog-overview.comp
     `,
     styles: []
 })
-export class NotAdminComponent{}
+export class NotAdminComponent {}
 
 @Component({
     selector: 'app-dialog',
@@ -25,33 +25,28 @@ export class DialogComponent implements OnInit {
     lastName: string;
     password: string;
 
-	public isAdmin:string;
+    public isAdmin: string;
 
-    constructor(public dialog: MatDialog,  private snackBar: MatSnackBar) {
-    	
-    }
-	
+    constructor(public dialog: MatDialog,  private snackBar: MatSnackBar) {}
     ngOnInit() {
-    	this.isAdmin = localStorage.getItem('isAdmin');
+        this.isAdmin = localStorage.getItem('isAdmin');
     }
-	
-	
     openDialog(): void {
-    	if(this.isAdmin=='true'){
+    	if (this.isAdmin === 'true') {
 		    const dialogRef = this.dialog.open(DialogOverviewComponent, {
 		        width: '500px',
 		        data: { username: this.username, firstName: this.firstName, lastName: this.lastName, password: this.password }
 		    });
-		
+
 		    dialogRef.afterClosed().subscribe(result => {
 		        this.username = result;
 		    });
-    	}else{
+    	} else {
    			this.openNotAdmin();
    		}
-    	
+
     }
-    openNotAdmin(){
+    openNotAdmin() {
         this.snackBar.openFromComponent(NotAdminComponent, {
         	duration:  1000,
     	});

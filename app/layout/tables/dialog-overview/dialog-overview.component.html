@@ -42,8 +42,8 @@
     </p>
 </div>
 <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Back</button>
-    <button mat-button [mat-dialog-close]="data.username"  (click)="createUser()">OK</button>
+    <button mat-raised-button [color]="'accent'" (click)="onNoClick()">Back</button>
+    <button mat-raised-button [mat-dialog-close]="data.username"  [color]="'primary'" (click)="createUser()">OK</button>
 </div>
 
 

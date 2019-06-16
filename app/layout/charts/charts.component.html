@@ -1,12 +1,12 @@
 <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
     <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
-        <div [fxFlex]="100">
+        <div [fxFlex]="100">         
             <mat-card >
-                <mat-card-header>
-                    <mat-card-title>Last seven Days</mat-card-title>
-                    <mat-card-title> Showing : {{ dataType }}</mat-card-title>
-                </mat-card-header>
-                <app-tool-tip style="float: right;" [dataType]="dataType" (talk)="talkBack($event)" ></app-tool-tip>
+                <div fxLayout="row" fxLayoutAlign="space-between start" [fxFlex]="100">
+                    <mat-card-title>Last 7 Days</mat-card-title>
+                    <p> Showing : {{ dataType }}</p>
+                    <app-tool-tip   [dataType]="dataType" (talk)="talkBack($event)" ></app-tool-tip>
+                </div>
                 <mat-card-content *ngIf="loaded" >
                     <canvas baseChart width="500" height="200" 
                         [datasets]="lineChartData"  
@@ -21,7 +21,7 @@
         </div>
     </div>
 </div>
-<div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
+<div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutAlign="space-around stretch" fxLayoutGap="20px">
     <div [fxFlex]="50">
         <mat-card>
             <mat-card-header>
@@ -30,7 +30,7 @@
             <app-tables [perdevice]="false"></app-tables>
         </mat-card>
     </div>
-     <div [fxFlex]="50">
+    <div [fxFlex]="50">
         <mat-card>
             <mat-card-header>
                 <mat-card-title>Last messages received - PER DEVICE</mat-card-title>
@@ -42,12 +42,12 @@
 <div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
     <div [fxFlex]="100">
         <mat-card>
-            <mat-card-header>
+            <div fxLayout="row" fxLayoutAlign="space-between start" [fxFlex]="100">
                     <mat-card-title>Last 24 Hours</mat-card-title>
-                    <mat-card-title> Showing : {{ dataTypeToday }}</mat-card-title>
-            </mat-card-header>
-                <app-tool-tip style="float: right;" [dataType]="dataTypeToday" (talk)="talkBackToday($event)" ></app-tool-tip>
-                <mat-card-content *ngIf="loadedToday">
+                    <p> Showing : {{ dataTypeToday }}</p>
+                    <app-tool-tip   [dataType]="dataTypeToday" (talk)="talkBackToday($event)" ></app-tool-tip>
+            </div>
+            <mat-card-content *ngIf="loadedToday">
                     <canvas baseChart width="500" height="200" 
                         [datasets]="lineChartDataToday"  
                         [labels]="lineChartLabelsToday" 
