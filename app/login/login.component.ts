@@ -30,16 +30,34 @@ export class LoginComponent implements OnInit {
     ngOnInit() {   }
 
     onLogin() {
-        this.response = this.login(this.user, this.pass);
-        if(this.response){
-            localStorage.setItem('isLoggedin', 'true');
-            this.dataApi.getUser(this.user).subscribe( (userE:User) =>  {
-            	 localStorage.setItem('isAdmin', userE.admin.toString());
-            });
-            this.router.navigate(['/charts'] );
-        }else{
-            this.openWrongPass();
-        }
+        this.dataApi.login(this.user, this.pass).subscribe(
+        res => {
+            console.log(res);
+            if(res){
+                localStorage.setItem('isLoggedin', 'true');
+                localStorage.setItem('username', this.user);
+                this.dataApi.getUser(this.user).subscribe( (userE: User) =>  {
+                    // store If user is admin or not
+                    localStorage.setItem('isAdmin', userE.admin.toString());
+                    if ( !userE.admin) {
+                        // if not admin check subscribed devices
+                        let devs = "";
+                        this.dataApi.getSubscriptions(this.user).subscribe( (devices:string[]) =>  {
+                            for(let i =0; devices.length > i; i++){
+                                devs = devs + devices[i] ;
+                                devs = devs +',';
+                            }
+                            localStorage.setItem("devices", devs);
+                            console.log( "devs:" + devs);
+                        });
+                    }
+                });
+                this.router.navigate(['/charts'] );
+            } else {
+                this.openWrongPass();
+            }
+
+        });
     }
     login( user,  pass):boolean{
          this.dataApi.login(user, pass).subscribe(

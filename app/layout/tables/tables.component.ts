@@ -17,15 +17,14 @@ export class TablesComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     public isAdmin:string;
-    
+
     constructor(private dataApi: ApiService) {
     	const msj: User[] = [];
 		this.dataSource = new MatTableDataSource(msj);
     }
 
-    
+
     ngOnInit() {
-    	
         this.dataApi.getUsers().subscribe((list :User[]) => {
             this.dataSource.data = list;
             this.ready=true;
