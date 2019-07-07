@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TopnavComponent implements OnInit {
     public pushRightClass: string;
+    public username: string = localStorage.getItem('username');
 
     constructor(public router: Router, private translate: TranslateService) {
         this.router.events.subscribe(val => {

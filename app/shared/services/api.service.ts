@@ -24,7 +24,9 @@ export class ApiService {
 
 
     createUser(username, firstname, lastname, admin, password) {
-        const url_api =  Configuration.server + '/register?admin=' + admin + '&firstName=' + firstname + '&lastName=' + lastname + '&username=' + username + '&pasword=' + password;
+        const url_api =  Configuration.server + '/register?admin=' + admin +
+            '&firstName=' + firstname + '&lastName=' + lastname + '&username=' +
+            username + '&pasword=' + password;
         return this.http.get(url_api);
     }
 
@@ -46,19 +48,23 @@ export class ApiService {
         return this.http.get(url_api);
     }
     getUsers() {
-    	const url_api =   Configuration.server + '/getusers';
+        const url_api =   Configuration.server + '/getusers';
         return this.http.get(url_api);
     }
     getUser(username) {
-    	const url_api =   Configuration.server + '/getuser?username=' + username;
+        const url_api =   Configuration.server + '/getuser?username=' + username;
         return this.http.get(url_api);
     }
     subscribeToDevice(username, devices: string[]) {
-		const url_api =   Configuration.server + '/setrelation?username=' + username + '&devices=' + devices;
+        const url_api =   Configuration.server + '/setrelation?username=' + username + '&devices=' + devices;
         return this.http.get(url_api);
     }
     getSubscriptions(username) {
-    	const url_api =   Configuration.server + '/getrelation?username=' + username;
+        const url_api =   Configuration.server + '/getrelation?username=' + username;
+        return this.http.get(url_api);
+    }
+    getLastYear(typeOfData, username) {
+        const url_api =   Configuration.server + '/getlastyear?name=' + typeOfData + '&username=' + username;
         return this.http.get(url_api);
     }
 

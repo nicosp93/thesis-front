@@ -60,4 +60,25 @@
             </mat-card>
     </div>
 </div>
+<div class="mb-20" fxLayout="row" fxLayout.lt-md="column" fxFlex fxLayoutGap="20px">
+    <div [fxFlex]="100">
+        <mat-card>
+            <div fxLayout="row" fxLayoutAlign="space-between start" [fxFlex]="100">
+                    <mat-card-title>Last Year</mat-card-title>
+                    <p> Showing : {{ dataTypeYear }}</p>
+                    <app-tool-tip   [dataType]="dataTypeYear" (talk)="talkBackYear($event)" ></app-tool-tip>
+            </div>
+            <mat-card-content *ngIf="loadedYear">
+                    <canvas baseChart width="500" height="200" 
+                        [datasets]="lineChartDataYear"  
+                        [labels]="lineChartLabelsYear" 
+                        [options]="lineChartOptions"
+                        [colors]="lineChartColors" 
+                        [legend]="lineChartLegend" 
+                        [chartType]="lineChartType" >
+                    </canvas>
+                </mat-card-content>
+            </mat-card>
+    </div>
+</div>
 

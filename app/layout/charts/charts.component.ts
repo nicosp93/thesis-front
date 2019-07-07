@@ -17,7 +17,7 @@ export class ChartsComponent implements OnInit {
     constructor(private dataApi: ApiService, private datePipe: DatePipe) {
     }
     typeOfData: string ;
-    dataType = '';
+    dataType = 'temperature_1';
 
     public lineChartLabels: Array<any> = [];
     public lineChartOptions: any = {
@@ -81,22 +81,41 @@ export class ChartsComponent implements OnInit {
 
     public loaded = false;
 
-    public dataTypeToday = '';
+    // Variables for last 24h chart
+    public dataTypeToday = 'temperature_1';
     public dataValuesToday = new Array<Array<number>>();
     public devicesToday = new Array<string>();
     public lineChartLabelsToday: Array<string> = [];
     public loadedToday = false;
     public lineChartDataToday: Array<any> = [];
 
+    // Variabels for last year chart
+    public dataTypeYear = 'temperature_1';
+    public dataValuesYear = new Array<Array<number>>();
+    public devicesYear = new Array<string>();
+    public lineChartLabelsYear: Array<string> = [];
+    public loadedYear = false;
+    public lineChartDataYear: Array<any> = [];
+
     ngOnInit() {
         this.lineChartLegend = true;
         this.lineChartType = 'line';
         this.lastWeeklyMessages();
         this.last24hours();
+        this.lastyear();
     }
 
     sameDayOfWeek( date1: Date, date2: Date): boolean {
         if (date1 === date2) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    sameMonth( date1: Date, date2: Date): boolean {
+        const datee1 = date1.toString().substring(0, 7);
+        const datee2 = date1.toString().substring(0, 7);
+        if (datee1 === datee2) {
             return true;
         } else {
             return false;
@@ -107,6 +126,16 @@ export class ChartsComponent implements OnInit {
         this.dataType = e;
         console.log(this.dataType);
         this.lastWeeklyMessages();
+    }
+    talkBackToday(e: string) {
+        this.dataTypeToday = e;
+        console.log(this.dataTypeToday);
+        this.last24hours();
+    }
+    talkBackYear(e: string) {
+        this.dataTypeYear = e;
+        console.log(this.dataTypeYear);
+        this.lastyear();
     }
 
     clearVariables() {
@@ -120,6 +149,12 @@ export class ChartsComponent implements OnInit {
         this.devicesToday  = new Array<string>();
         this.lineChartDataToday = new Array<any>();
     }
+    clearVariablesYear() {
+        this.dataValuesYear = new Array<Array<number>>();
+        this.lineChartLabelsYear  = new Array<string>();
+        this.devicesYear  = new Array<string>();
+        this.lineChartDataYear = new Array<any>();
+    }
 
     lastWeeklyMessages() {
         this.loaded = false;
@@ -132,7 +167,13 @@ export class ChartsComponent implements OnInit {
         const day_four: Date = new Date(); day_four.setDate(today.getDate() - 4);
         const day_five: Date = new Date(); day_five.setDate(today.getDate() - 5);
         const day_six: Date = new Date(); day_six.setDate(today.getDate() - 6);
-        this.lineChartLabels = [this.datePipe.transform(today, 'yyyy-MM-dd'), this.datePipe.transform(day_one, 'yyyy-MM-dd'), this.datePipe.transform(day_two, 'yyyy-MM-dd'), this.datePipe.transform(day_three, 'yyyy-MM-dd'), this.datePipe.transform(day_four, 'yyyy-MM-dd'), this.datePipe.transform(day_five, 'yyyy-MM-dd'), this.datePipe.transform(day_six, 'yyyy-MM-dd')];
+        this.lineChartLabels = [this.datePipe.transform(today, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_one, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_two, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_three, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_four, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_five, 'yyyy-MM-dd'),
+                                this.datePipe.transform(day_six, 'yyyy-MM-dd')];
         const lastDatePerDevice  = new Array<Date>();
         const subscriptions: Array<string> = [];
 
@@ -149,7 +190,8 @@ export class ChartsComponent implements OnInit {
                 // If device already is in data collected
                 if (this.sameDayOfWeek(list[i].date, lastDatePerDevice[this.devices.indexOf(list[i].sensorId)] )) {
                     // If the value is in the same day, do the average
-                    const oldValue: number = this.dataValues[this.devices.indexOf(list[i].sensorId)][this.lineChartLabels.indexOf(list[i].date)];
+                    const oldValue: number = this.dataValues[this.devices.indexOf(list[i].sensorId)][this.lineChartLabels
+                                            .indexOf(list[i].date)];
                     const newValue: number = +list[i].value;
                     const average: number = (oldValue + newValue) / 2;
                     this.dataValues[this.devices.indexOf(list[i].sensorId)][this.lineChartLabels.indexOf(list[i].date)] = average;
@@ -181,6 +223,19 @@ export class ChartsComponent implements OnInit {
             this.dataValues[this.devices.indexOf(item.sensorId)][this.lineChartLabels.indexOf(item.date)] = +item.value;
         }
     }
+    setValueInMonth(item: Message, firstTime: Boolean) {
+        if (firstTime) {
+            const fixLenght: Array<number> = [null, null, null, null, null, null, null, null, null, null, null, null];
+            this.dataValuesYear.push(fixLenght);
+            console.log(item.date.toString().substring(0, 7));
+            this.dataValuesYear[this.dataValuesYear.length - 1]
+                                [this.lineChartLabelsYear.indexOf(item.date.toString().substring(0, 7))] = +item.value;
+        } else {
+            this.dataValuesYear[this.devicesYear.indexOf(item.sensorId)]
+                                [this.lineChartLabelsYear.indexOf(item.date.toString().substring(0, 7))] = +item.value;
+        }
+    }
+
     last24hours() {
         this.loadedToday = false;
         this.clearVariablesToday();
@@ -208,13 +263,6 @@ export class ChartsComponent implements OnInit {
         this.loadedToday = true;
       });
     }
-
-    talkBackToday(e: string) {
-        this.dataTypeToday = e;
-        console.log(this.dataTypeToday);
-        this.last24hours();
-    }
-
     setChartLabelHours() {
         const iter_date: Date = new Date();
         for (let i = 0; i < 24; i++) {
@@ -227,15 +275,69 @@ export class ChartsComponent implements OnInit {
         if (firstTime) {
             const arrayAux: Array<number> = [];
             for (let i = 0; i < this.lineChartLabelsToday.length; i++) {
-            	arrayAux.push(null);
+                arrayAux.push(null);
             }
-            console.log('fix lenght array');
-            console.log(arrayAux);
             this.dataValuesToday.push(arrayAux);
             this.dataValuesToday[this.devicesToday.indexOf(item.sensorId)][this.lineChartLabelsToday.indexOf(item.time)] = +item.value;
         } else {
-        	this.dataValuesToday[this.devicesToday.indexOf(item.sensorId)][this.lineChartLabelsToday.indexOf(item.time)] = +item.value;
+            this.dataValuesToday[this.devicesToday.indexOf(item.sensorId)][this.lineChartLabelsToday.indexOf(item.time)] = +item.value;
         }
+    }
+
+    lastyear() {
+        this.loadedYear = false;
+        this.clearVariablesYear();
+        // Create last 12 months
+        const month: Date = new Date();
+        for (let m = 0; m <= 11; m++) {
+            const month_aux: Date = new Date();
+            month_aux.setMonth(month.getMonth() - m);
+            this.lineChartLabelsYear.push(this.datePipe.transform(month_aux, 'yyyy-MM'));
+        }
+        const lastDatePerDeviceYear  = new Array<Date>();
+        const subscriptions: Array<string> = [];
+        // Get data from Back-End
+        this.dataApi.getLastYear(this.dataTypeYear, localStorage.getItem('username')).subscribe((list: Message[]) => {
+        for ( let i = 0; i <  list.length; i++) {
+            if (this.devicesYear.indexOf(list[i].sensorId) === -1 ) {
+                // New Device Found
+                this.devicesYear.push(list[i].sensorId);
+                lastDatePerDeviceYear.push(list[i].date);
+                const arrayAux: number[] = [+list[i].value];
+                this.setValueInMonth(list[i], true);
+            } else {
+                // If device already is in data collected
+                if (this.sameMonth(list[i].date, lastDatePerDeviceYear[this.devicesYear.indexOf(list[i].sensorId)] )) {
+                    // If the value is in the same month, do the average
+                    const oldValue: number = this.dataValuesYear[this.devicesYear.indexOf(list[i].sensorId)][this.lineChartLabelsYear
+                                            .indexOf(list[i].date.toString().substring(0, 7))];
+                    const newValue: number = +list[i].value;
+                    const average: number = (oldValue + newValue) / 2;
+                    this.dataValuesYear[this.devicesYear.indexOf(list[i].sensorId)]
+                                        [this.lineChartLabelsYear.indexOf(list[i].date.toString().substring(0, 7))]
+                    = average;
+                } else {
+                    // If not, add new entry value
+                    this.setValueInMonth(list[i], false);
+                    lastDatePerDeviceYear[this.devicesYear.indexOf(list[i].sensorId)] = list[i].date;
+                }
+            }
+        }
+        // Assign variables
+        this.lineChartDataYear.length = 0;
+        console.log('devicesyear');
+        console.log(this.devicesYear);
+        console.log('devicesValues');
+        console.log(this.dataValuesYear);
+        console.log(this.lineChartDataYear);
+        for (let n = 0; n < this.devicesYear.length; n++) {
+            this.lineChartDataYear.push({
+                label : this.devicesYear[n],
+                data : this.dataValuesYear[n]
+            });
+        }
+        this.loadedYear = true;
+      });
     }
 }
 
